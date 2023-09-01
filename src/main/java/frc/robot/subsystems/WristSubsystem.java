@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
 
@@ -23,7 +24,7 @@ public class WristSubsystem extends SubsystemBase {
   /** Creates a new WristSubsystem. */
   public WristSubsystem() {
 
-    wristMotor = new CANSparkMax(5, MotorType.kBrushless);  
+    wristMotor = new CANSparkMax(WristConstants.WristPort, MotorType.kBrushless);  
     wristMotor.restoreFactoryDefaults(); 
     wristEncoder = wristMotor.getEncoder();
     wristMotor.getEncoder().setPosition(0); 
@@ -36,6 +37,11 @@ public class WristSubsystem extends SubsystemBase {
 
   public double getEncoder(){
     return wristEncoder.getPosition(); 
+  
+  }
+
+  public void resetEncoders(){
+    wristEncoder.setPosition(0); 
   }
 
   public void setWrist(double wristSpeed){
