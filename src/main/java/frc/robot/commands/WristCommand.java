@@ -17,12 +17,14 @@ public class WristCommand extends CommandBase {
 
   double wristSetpoint; 
   double measurement; 
+  boolean inAutonomousMode; 
 
   /** Creates a new WristCommand. */
-  public WristCommand(WristSubsystem wrist, double setPoint) {
+  public WristCommand(WristSubsystem wrist, double setPoint, boolean inAuto) {
     this.WRIST_SUBSYSTEM = wrist; 
-    this.pidController = new PIDController(0.04, 0, 0); 
+    this.pidController = new PIDController(0.075, 0, 0); 
     this.wristSetpoint = setPoint; 
+    this.inAutonomousMode = inAuto; 
     addRequirements(WRIST_SUBSYSTEM);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -64,14 +66,19 @@ public class WristCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // if(Math.abs(WRIST_SUBSYSTEM.getEncoder() - wristSetpoint) < 0.2){
-    //   return true; 
-    // }
 
-    // else{
-    //   return false; 
-    // }  
+    if(inAutonomousMode == true){
+      if(Math.abs(WRIST_SUBSYSTEM.getEncoder() - wristSetpoint) < 0.75){
+        return true; 
+      }
 
-    return false; 
+      else{
+        return false; 
+      }  
+    }
+
+    else{
+      return false; 
+    } 
   }
 }

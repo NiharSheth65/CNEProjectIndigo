@@ -18,8 +18,8 @@ public class DefaultDriveCommand extends CommandBase {
   double drive;
   double turn; 
 
-  SlewRateLimiter drive_Limiter = new SlewRateLimiter(0.9); 
-  SlewRateLimiter turn_Limiter = new SlewRateLimiter(0.9); 
+  SlewRateLimiter drive_Limiter = new SlewRateLimiter(1); 
+  SlewRateLimiter turn_Limiter = new SlewRateLimiter(0.975); 
 
   /** Creates a new DefaultDriveCommand. */
   public DefaultDriveCommand(DriveSubsystem drive, Joystick joystick) {
@@ -44,7 +44,7 @@ public class DefaultDriveCommand extends CommandBase {
       drive = 0; 
     }
     else{
-      drive = joy.getRawAxis(1)*-0.70;  
+      drive = joy.getRawAxis(1)*-1.00;  
     }
 
     // turn 
@@ -53,23 +53,13 @@ public class DefaultDriveCommand extends CommandBase {
     }
     else{
       // turn = turn_Limiter.calculate(joy.getRawAxis(4)); 
-      turn = joy.getRawAxis(4)*-0.25; 
+      turn = joy.getRawAxis(4)*-0.7; 
     }
 
     // drive = -joy.getRawAxis(1) * 0.7; 
     // turn = -joy.getRawAxis(4) * 0.25; 
-    
 
-    SmartDashboard.putNumber("gyro yaw", DRIVE_SUBSYSTEM.getYaw()); 
-    SmartDashboard.putNumber("gyro pitch", DRIVE_SUBSYSTEM.getPitch()); 
-    SmartDashboard.putNumber("gyro roll", DRIVE_SUBSYSTEM.getRoll()); 
-
-
-    SmartDashboard.putNumber("right encoder", DRIVE_SUBSYSTEM.rightEncoder()); 
-    SmartDashboard.putNumber("left encoder", DRIVE_SUBSYSTEM.leftEncoder());
-    SmartDashboard.putNumber("average disatance", (DRIVE_SUBSYSTEM.rightEncoder() + DRIVE_SUBSYSTEM.leftEncoder())/2); 
-
-    DRIVE_SUBSYSTEM.set(drive_Limiter.calculate(drive), turn_Limiter.calculate(turn));
+    DRIVE_SUBSYSTEM.set(drive_Limiter.calculate(drive), turn);
   }
 
   // Called once the command ends or is interrupted.

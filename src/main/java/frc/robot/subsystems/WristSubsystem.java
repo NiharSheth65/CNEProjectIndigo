@@ -36,6 +36,11 @@ public class WristSubsystem extends SubsystemBase {
 
   public double getEncoder(){
     return wristEncoder.getPosition(); 
+  
+  }
+
+  public void resetEncoders(){
+    wristEncoder.setPosition(0); 
   }
 
   public void setWrist(double wristSpeed){

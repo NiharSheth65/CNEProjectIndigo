@@ -13,20 +13,24 @@ public class IntakeCommand extends CommandBase {
   private IntakeSubsystem Intake_Subsystem; 
   private LedSubsystem Led_Subsystem; 
 
-  double intakeSpeed; 
+  double intakeSpeed;
+  boolean autonState; 
 
-  public IntakeCommand(IntakeSubsystem intake, LedSubsystem led, double speed) {
+  double startTime; 
+
+  public IntakeCommand(IntakeSubsystem intake, LedSubsystem led, double speed, boolean auto) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.Intake_Subsystem = intake; 
     this.intakeSpeed = speed; 
     this.Led_Subsystem = led; 
+    this.autonState = auto; 
     addRequirements(Intake_Subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    startTime = System.currentTimeMillis(); 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,7 +38,7 @@ public class IntakeCommand extends CommandBase {
   public void execute() {
     Intake_Subsystem.intake(intakeSpeed);
 
-    if(Intake_Subsystem.intakeSwitchOneValue() == false || Intake_Subsystem.intakeSwitchTwoValue() == false){
+    if(Intake_Subsystem.intakeSwitchOneValue() == true){
       Led_Subsystem.setOneColour(0, 255, 0);
     }
 
@@ -54,20 +58,32 @@ public class IntakeCommand extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    // return false; 
-    if(intakeSpeed < 0){
-      if(Intake_Subsystem.intakeSwitchOneValue() == false ||Intake_Subsystem.intakeSwitchTwoValue() == false){
+    if(autonState == true){
+      if(System.currentTimeMillis() - startTime > 1000){
         return true; 
       }
-  
+
       else{
         return false; 
       }
     }
 
     else{
-      return false; 
+      return false;   
     }
+    // if(intakeSpeed < 0){
+    //   if(Intake_Subsystem.intakeSwitchOneValue() == true){
+    //     return true; 
+    //   }
+  
+    //   else{
+    //     return false; 
+    //   }
+    // }
+
+    // else{
+    //   return false; 
+    // }
 
 
   }

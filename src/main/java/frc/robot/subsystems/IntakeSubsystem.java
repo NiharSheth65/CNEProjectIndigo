@@ -27,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Intake Switch 1", intakeSwitch1.get()); 
-    SmartDashboard.putBoolean("Intake Switch 2", intakeSwitch2.get()); 
+    // SmartDashboard.putBoolean("Intake Switch 2", intakeSwitch2.get()); 
   }
 
   public boolean intakeSwitchOneValue(){
