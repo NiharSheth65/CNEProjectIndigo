@@ -8,6 +8,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DefaultDriveCommand extends CommandBase {
@@ -18,8 +20,8 @@ public class DefaultDriveCommand extends CommandBase {
   double drive;
   double turn; 
 
-  SlewRateLimiter drive_Limiter = new SlewRateLimiter(0.9); 
-  SlewRateLimiter turn_Limiter = new SlewRateLimiter(0.9); 
+  SlewRateLimiter drive_Limiter = new SlewRateLimiter(DriverConstants.driveSlew); 
+  SlewRateLimiter turn_Limiter = new SlewRateLimiter(DriverConstants.turnSlew); 
 
   /** Creates a new DefaultDriveCommand. */
   public DefaultDriveCommand(DriveSubsystem drive, Joystick joystick) {
@@ -40,36 +42,27 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
 
-    if(Math.abs(joy.getRawAxis(1)) < 0.1){
+    if(Math.abs(joy.getRawAxis(OperatorConstants.driveJoystickAxis)) < DriverConstants.driveDeadband){
       drive = 0; 
     }
     else{
-      drive = joy.getRawAxis(1)*-0.70;  
+      drive = joy.getRawAxis(OperatorConstants.driveJoystickAxis)*-DriverConstants.driveSpeed;  
     }
 
     // turn 
-    if(Math.abs(joy.getRawAxis(4)) < 0.1){
+    if(Math.abs(joy.getRawAxis(OperatorConstants.turnJoystickAxis)) < DriverConstants.turnDeadband){
       turn = 0; 
     }
+
     else{
       // turn = turn_Limiter.calculate(joy.getRawAxis(4)); 
-      turn = joy.getRawAxis(4)*-0.25; 
+      turn = joy.getRawAxis(OperatorConstants.turnJoystickAxis)*-DriverConstants.turnSpeed; 
     }
 
     // drive = -joy.getRawAxis(1) * 0.7; 
     // turn = -joy.getRawAxis(4) * 0.25; 
-    
 
-    SmartDashboard.putNumber("gyro yaw", DRIVE_SUBSYSTEM.getYaw()); 
-    SmartDashboard.putNumber("gyro pitch", DRIVE_SUBSYSTEM.getPitch()); 
-    SmartDashboard.putNumber("gyro roll", DRIVE_SUBSYSTEM.getRoll()); 
-
-
-    SmartDashboard.putNumber("right encoder", DRIVE_SUBSYSTEM.rightEncoder()); 
-    SmartDashboard.putNumber("left encoder", DRIVE_SUBSYSTEM.leftEncoder());
-    SmartDashboard.putNumber("average disatance", (DRIVE_SUBSYSTEM.rightEncoder() + DRIVE_SUBSYSTEM.leftEncoder())/2); 
-
-    DRIVE_SUBSYSTEM.set(drive_Limiter.calculate(drive), turn_Limiter.calculate(turn));
+    DRIVE_SUBSYSTEM.set(drive_Limiter.calculate(drive), turn);
   }
 
   // Called once the command ends or is interrupted.

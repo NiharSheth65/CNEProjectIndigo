@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,6 +21,7 @@ public final class Constants {
   public static class OperatorConstants {
 
     public static final int primaryControllerPort = 0;
+    public static final int secondaryControllerPort = 1;
 
     // button ports
     public static final int BUTTON_A_PORT = 1;
@@ -28,5 +34,93 @@ public final class Constants {
     public static final int BUTTON_START = 8;  
     public static final int BUTTON_RIGHT_JOYSTICK_PORT = 10; 
     public static final int BUTTON_LEFT_JOYSTICK_PORT = 9;   
+
+    public static final int driveJoystickAxis = 1;
+    public static final int turnJoystickAxis = 4;
+
+    public static final int rightTriggerAxis = 3; 
+    public static final double rightTriggerThreshold = 0.5; 
+
   }
+
+  public static class DriverConstants{
+
+    public static final int leftFrontID = 1; 
+    public static final int leftBackID = 2; 
+    public static final int rightFrontID = 3; 
+    public static final int rightBackID = 4; 
+
+
+    public static final double ksVolts = -0.22131; 
+    public static final double kvVoltsSecondPerMeter = 3.4154;  
+    public static final double kaVoltsSecondSquarePerMeter = 4.15; 
+    public static final double kPDriveVelocity = 3.0239; 
+
+
+    public static final double kTrackWidthMeters = Units.inchesToMeters(21); 
+    public static final DifferentialDriveKinematics kDifferentialDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeters); 
+    
+    public static final double kMaxSpeedMetersPerSecond = 3; 
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;  
+
+
+    public static final double kRamseteB = 2; 
+    public static final double kRamseteZeta = 0.7; 
+    
+    public static final double kGearRatio = 12.76; 
+    public static final double kWheelRadiusInches = 3; 
+
+    public static final double kLinearDistanceConversionFactor = (Units.inchesToMeters(1/(kGearRatio * 2*Math.PI*Units.inchesToMeters(kWheelRadiusInches))*10)); 
+  
+    public static final double driveSlew = 1; 
+    public static final double turnSlew = 0.975; 
+
+    public static final double driveDeadband = 0.1; 
+    public static final double turnDeadband = 0.1; 
+  
+    public static final double driveSpeed = 1; 
+    public static final double turnSpeed = 0.7;
+  }
+
+  public static class IntakeConstants{
+    public static final int intakeMotorPort = 0; 
+    public static final int switchOnePort = 0; 
+    public static final int switchTwoPort = 1; 
+
+    public static final double intakeSpeed = -0.7; 
+    public static final double intakeOffSpeed = 0; 
+    
+    public static final double outtakeSpeed = 1;
+    public static final double outtakeSlowSpeed = 0.5;
+
+  }
+
+  public static class LedConstants{
+    public static final int ledPort = 1; 
+    public static final int ledLength = 60; 
+    
+    public static final int[] greenColourCode = {0, 255, 0}; 
+    public static final int[] indigoColourCode = {75, 0, 130}; 
+  
+  }
+
+  public static class WristConstants{
+    public static final int WristPort = 5; 
+  
+    // wrist PID
+    public static final double wristKP = 0.075; 
+    public static final double wristKI = 0; 
+    public static final double wristKD = 0;
+
+    public static final double wristTolerance = 0.75; 
+    public static final double wristMaxSpeed = 1.0; 
+  
+    // wrist positions 
+    public static final double wristIntakePosition = 21.5; 
+    public static final double wristRestPosition = 1; 
+    public static final double wristShootPosition = 7; 
+    public static final double wristAboveIntakePosition = 20; 
+  }
+
 }
+ 
