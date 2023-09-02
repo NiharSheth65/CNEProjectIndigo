@@ -12,13 +12,14 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
 
-  private VictorSP intakeMotor = new VictorSP(0); 
-  private DigitalInput intakeSwitch1 = new DigitalInput(0); 
-  private DigitalInput intakeSwitch2 = new DigitalInput(1); 
+  private VictorSP intakeMotor = new VictorSP(IntakeConstants.intakeMotorPort); 
+  private DigitalInput intakeSwitch1 = new DigitalInput(IntakeConstants.switchOnePort); 
+  private DigitalInput intakeSwitch2 = new DigitalInput(IntakeConstants.switchTwoPort); 
 
   public IntakeSubsystem() { 
   }
@@ -27,7 +28,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Intake Switch 1", intakeSwitch1.get()); 
-    SmartDashboard.putBoolean("Intake Switch 2", intakeSwitch2.get()); 
+    // SmartDashboard.putBoolean("Intake Switch 2", intakeSwitch2.get()); 
   }
 
   public boolean intakeSwitchOneValue(){

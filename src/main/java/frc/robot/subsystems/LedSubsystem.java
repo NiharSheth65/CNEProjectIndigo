@@ -8,6 +8,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LedConstants;
 
 public class LedSubsystem extends SubsystemBase {
   /** Creates a new LedSubsystem. */  
@@ -18,10 +19,10 @@ public class LedSubsystem extends SubsystemBase {
   // private AddressableLEDBuffer led2_Buffer; 
 
   public LedSubsystem() {
-    led1 = new AddressableLED(1);
+    led1 = new AddressableLED(LedConstants.ledPort);
     // led2 = new AddressableLED(3);
     
-    led1_Buffer = new AddressableLEDBuffer(60); 
+    led1_Buffer = new AddressableLEDBuffer(LedConstants.ledLength); 
     // led2_Buffer = new AddressableLEDBuffer(60); 
 
     led1.setLength(led1_Buffer.getLength());

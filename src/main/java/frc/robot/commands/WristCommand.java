@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.WristConstants;
 import frc.robot.subsystems.WristSubsystem;
 
 public class WristCommand extends CommandBase {
@@ -17,12 +18,18 @@ public class WristCommand extends CommandBase {
 
   double wristSetpoint; 
   double measurement; 
+  double startTime; 
+  double runTime; 
+
+  boolean inAutonomousMode; 
 
   /** Creates a new WristCommand. */
-  public WristCommand(WristSubsystem wrist, double setPoint) {
+  public WristCommand(WristSubsystem wrist, double setPoint, boolean inAuto, double rt) {
     this.WRIST_SUBSYSTEM = wrist; 
-    this.pidController = new PIDController(0.04, 0, 0); 
+    this.pidController = new PIDController(WristConstants.wristKP, WristConstants.wristKI, WristConstants.wristKD); 
     this.wristSetpoint = setPoint; 
+    this.inAutonomousMode = inAuto; 
+    this.runTime = rt; 
     addRequirements(WRIST_SUBSYSTEM);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -31,6 +38,7 @@ public class WristCommand extends CommandBase {
   @Override
   public void initialize() {
     pidController.reset();
+    startTime = System.currentTimeMillis(); 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,20 +47,23 @@ public class WristCommand extends CommandBase {
     measurement = WRIST_SUBSYSTEM.getEncoder(); 
     double setValue = pidController.calculate(measurement, wristSetpoint); 
     
-    if(setValue >= 1.0){
-      setValue = 1.0; 
+    if(setValue >= WristConstants.wristMaxSpeed){
+      setValue = WristConstants.wristMaxSpeed; 
     }
 
-    else if(setValue <= -1.0){
-      setValue = -1.0; 
+    else if(setValue <= -WristConstants.wristMaxSpeed){
+      setValue = -WristConstants.wristMaxSpeed; 
     }
 
-    WRIST_SUBSYSTEM.setWrist(setValue);
-    
+    WRIST_SUBSYSTEM.setWrist(setValue * WristConstants.wristCutoff);
+
     // WRIST_SUBSYSTEM.setWrist(wristSetpoint);
 
     SmartDashboard.putNumber("wrist encoder: ", measurement);  
-    SmartDashboard.putNumber("motor speed", setValue); 
+    SmartDashboard.putNumber("wrist motor speed", setValue); 
+
+    SmartDashboard.putNumber("wrist set value", wristSetpoint);
+    SmartDashboard.putNumber("wrist current", WRIST_SUBSYSTEM.getWristCurrent());
   }
 
   // Called once the command ends or is interrupted.
@@ -64,14 +75,28 @@ public class WristCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // if(Math.abs(WRIST_SUBSYSTEM.getEncoder() - wristSetpoint) < 0.2){
-    //   return true; 
-    // }
 
-    // else{
-    //   return false; 
-    // }  
+    if(inAutonomousMode == true){
 
-    return false; 
+      if(Math.abs(startTime - System.currentTimeMillis()) < runTime){
+        if(Math.abs(WRIST_SUBSYSTEM.getEncoder() - wristSetpoint) < WristConstants.wristTolerance){
+          return true; 
+        }
+  
+        else{
+          return false; 
+        } 
+      }
+
+      else{
+        return true; 
+      }
+
+ 
+    }
+
+    else{
+      return false; 
+    } 
   }
 }
