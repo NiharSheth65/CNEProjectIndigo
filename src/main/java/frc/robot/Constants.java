@@ -39,7 +39,10 @@ public final class Constants {
     public static final int turnJoystickAxis = 4;
 
     public static final int rightTriggerAxis = 3; 
-    public static final double rightTriggerThreshold = 0.5; 
+    public static final int leftTriggerAxis = 2; 
+
+
+    public static final double triggerThreshold = 0.5; 
 
   }
 
@@ -91,7 +94,9 @@ public final class Constants {
     public static final double intakeOffSpeed = 0; 
     
     public static final double outtakeSpeed = 1;
-    public static final double outtakeSlowSpeed = 0.25;
+    public static final double outtakeSlowSpeed = 0.35;
+    public static final double outtakeMidSpeed = 0.55;
+
 
   }
 
@@ -118,7 +123,7 @@ public final class Constants {
     // wrist positions 
     public static final double wristIntakePosition = 43; 
     public static final double wristRestPosition = 2; 
-    public static final double wristShootPosition = 14; 
+    public static final double wristShootPosition = 12; 
     public static final double wristAboveIntakePosition = 37; 
 
     // wrist speed 
@@ -131,7 +136,7 @@ public final class Constants {
     public static final double dockDistance = -2.76;
     public static final double autoDriveSpeed = -0.5;
   
-    public static final double autoDockingSpeed = 0.25; 
+    public static final double autoDockingSpeed = 0.3; 
 
     public static final double autoCutOff = 0.7;
   }

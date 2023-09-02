@@ -38,7 +38,7 @@ public class autoGyroCommand extends CommandBase {
     }
 
     else if(DRIVE_SUBSYSTEM.getHeading() > gyroInitPosition){
-      correctionSpeed = -AutoConstants.autoDockingSpeed; 
+      correctionSpeed = -1 * AutoConstants.autoDockingSpeed; 
     }
 
     else if(DRIVE_SUBSYSTEM.getHeading() < gyroInitPosition){

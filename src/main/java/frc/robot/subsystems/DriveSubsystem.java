@@ -85,6 +85,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("right encoder", rightEncoderPosition()); 
     SmartDashboard.putNumber("left encoder", leftEncoderPosition());
     SmartDashboard.putNumber("gyro heading", getHeading());   
+    SmartDashboard.putNumber("gyro PITCH", gyroYaw());   
   }
 
   public void setBrakeMode(){
@@ -174,6 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double gyroYaw(){
     return navx.getAngle();
   }
+
   public double getAverageEncoderDistance(){
     return ((leftEncoderPosition() + rightEncoderPosition())/2); 
   }

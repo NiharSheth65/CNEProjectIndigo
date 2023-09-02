@@ -170,8 +170,12 @@ public class RobotContainer {
 
     BUTTON_Y.toggleOnTrue(new WristCommand(m_WristSubsystem, WristConstants.wristAboveIntakePosition, false, 0)); 
    
-    controller.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.rightTriggerThreshold).toggleOnFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
-    controller.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.rightTriggerThreshold).toggleOnTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSlowSpeed, false)); 
+    controller.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.triggerThreshold).toggleOnFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
+    controller.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.triggerThreshold).toggleOnTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSlowSpeed, false)); 
+    
+    controller.axisGreaterThan(OperatorConstants.leftTriggerAxis, OperatorConstants.triggerThreshold).toggleOnFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
+    controller.axisGreaterThan(OperatorConstants.leftTriggerAxis, OperatorConstants.triggerThreshold).toggleOnTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeMidSpeed, false)); 
+  
   }
 
   /**
