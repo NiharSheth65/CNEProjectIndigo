@@ -39,7 +39,9 @@ public final class Constants {
     public static final int turnJoystickAxis = 4;
 
     public static final int rightTriggerAxis = 3; 
-    public static final double rightTriggerThreshold = 0.5; 
+    public static final int leftTriggerAxis = 2; 
+
+    public static final double triggerThreshold = 0.5; 
 
   }
 
@@ -78,7 +80,10 @@ public final class Constants {
     public static final double driveDeadband = 0.1; 
     public static final double turnDeadband = 0.1; 
   
-    public static final double driveSpeed = 0.8; 
+    public static final double driveSlowSpeed = 0.7; 
+    public static final double driveFastSpeed = 1.0; 
+    // public static final double driveSpeed = 0.8; 
+    
     public static final double turnSpeed = 0.7;
   }
 
@@ -91,6 +96,7 @@ public final class Constants {
     public static final double intakeOffSpeed = 0; 
     
     public static final double outtakeSpeed = 1;
+    public static final double outtakeMidSpeed = 0.55;
     public static final double outtakeSlowSpeed = 0.25;
 
   }
@@ -119,21 +125,23 @@ public final class Constants {
     public static final double wristIntakePosition = 43; 
     public static final double wristRestPosition = 2; 
     public static final double wristShootPosition = 14; 
-    public static final double wristAboveIntakePosition = 37; 
+    public static final double wristAboveIntakePosition = 43; 
+    public static final double wristLowerOuttakePosition = 25;  
 
     // wrist speed 
     public static final double wristCutoff = 0.6; 
   }
 
   public static class AutoConstants{
-    public static final double clearDistance = -10;
+    public static final double clearDistance = -4;
     // public static final double dockDistance = -2.76;
     public static final double dockDistance = -2.76;
     public static final double autoDriveSpeed = -0.5;
   
-    public static final double autoDockingSpeed = 0.25; 
+    public static final double autoDockingSpeedOverShoot = 0.25; 
+    public static final double autoDockingSpeedUnderShoot = -0.25; 
 
-    public static final double autoCutOff = 0.7;
+    public static final double autoCutOff = 3;
   }
 
 }

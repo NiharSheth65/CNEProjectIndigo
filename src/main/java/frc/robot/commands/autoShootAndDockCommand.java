@@ -24,7 +24,7 @@ public class autoShootAndDockCommand extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     
-    double autoInitPosition = drive.getHeading(); 
+    double autoInitPosition = drive.getRoll(); 
     
     addCommands(
       // new SequentialCommandGroup(
@@ -32,7 +32,7 @@ public class autoShootAndDockCommand extends SequentialCommandGroup {
       //   new IntakeCommand(intake, led, 0.5, true)
       // )
 
-      new WristCommand(wrist, WristConstants.wristShootPosition, true, 5000),
+      new WristCommand(wrist, WristConstants.wristShootPosition, true, 2000),
       new IntakeCommand(intake, led, IntakeConstants.outtakeSpeed, true),
       new autoDriveForwardCommand(drive, AutoConstants.dockDistance, AutoConstants.autoDriveSpeed), 
       // new DelayCommand(750),

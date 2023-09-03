@@ -38,7 +38,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   DifferentialDrive differentialDrive = new DifferentialDrive(leftControllerGroup, rightControllerGroup); 
   
-  private final static Gyro navx = new AHRS(SPI.Port.kMXP); 
+  // private final static Gyro navx = new AHRS(SPI.Port.kMXP); 
+  private AHRS navx;
+
   private final DifferentialDriveOdometry m_Odometry;  
 
   public DriveSubsystem() {
@@ -63,10 +65,14 @@ public class DriveSubsystem extends SubsystemBase {
     rightFrontEncoder.setVelocityConversionFactor(DriverConstants.kLinearDistanceConversionFactor/60); 
     leftFrontEncoder.setVelocityConversionFactor(DriverConstants.kLinearDistanceConversionFactor/60); 
 
-    navx.reset();
-    navx.calibrate(); 
-    resetEncoders(); 
+    // navx.reset();
+    // navx.calibrate(); 
+    // resetEncoders(); 
 
+    navx = new AHRS(SPI.Port.kMXP);
+    navx.reset();
+    navx.zeroYaw();
+    navx.calibrate(); 
 
     m_Odometry = new DifferentialDriveOdometry(navx.getRotation2d(), 0, 0);
     m_Odometry.resetPosition(new Rotation2d(), leftEncoderPosition(), rightEncoderPosition() , new Pose2d());
@@ -84,7 +90,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("right encoder", rightEncoderPosition()); 
     SmartDashboard.putNumber("left encoder", leftEncoderPosition());
-    SmartDashboard.putNumber("gyro heading", getHeading());   
+    // SmartDashboard.putNumber("gyro ", getHeading());  
+    SmartDashboard.putNumber("gyro PITCH", getPitch());   
+    SmartDashboard.putNumber("gyro Yaw", getYaw());   
+    SmartDashboard.putNumber("gyro Roll", getRoll());   
   }
 
   public void setBrakeMode(){
@@ -125,8 +134,21 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate(){
     return -navx.getRate(); 
   }
-  public static double getHeading(){
-    return navx.getRotation2d().getDegrees(); 
+
+  // public static double getHeading(){
+  //   return navx.getRotation2d().getDegrees(); 
+  // }
+
+  public double getRoll(){
+    return navx.getRoll();
+  }
+
+  public double getPitch(){
+    return navx.getPitch();
+  }
+
+  public double getYaw(){
+    return navx.getYaw();
   }
 
 
@@ -137,7 +159,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetOdometry(Pose2d pose){
     resetEncoders(); 
     // m_Odometry.resetPosition(navx.getRotation2d(), leftEncoderPosition(), rightEncoderPosition(), pose);
-    m_Odometry.resetPosition(null, getHeading(), getAverageEncoderDistance(), pose);
+    m_Odometry.resetPosition(null, navx.getYaw(), getAverageEncoderDistance(), pose);
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
@@ -174,6 +196,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double gyroYaw(){
     return navx.getAngle();
   }
+
   public double getAverageEncoderDistance(){
     return ((leftEncoderPosition() + rightEncoderPosition())/2); 
   }

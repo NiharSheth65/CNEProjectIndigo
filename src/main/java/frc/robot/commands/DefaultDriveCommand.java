@@ -19,6 +19,7 @@ public class DefaultDriveCommand extends CommandBase {
 
   double drive;
   double turn; 
+  double driveSpeed;
 
   SlewRateLimiter drive_Limiter = new SlewRateLimiter(DriverConstants.driveSlew); 
   SlewRateLimiter turn_Limiter = new SlewRateLimiter(DriverConstants.turnSlew); 
@@ -42,11 +43,20 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
 
+
+    if(joy.getRawButton(OperatorConstants.BUTTON_RB_PORT)){
+      driveSpeed = DriverConstants.driveFastSpeed; 
+    }
+
+    else{
+      driveSpeed = DriverConstants.driveSlowSpeed;
+    }
+
     if(Math.abs(joy.getRawAxis(OperatorConstants.driveJoystickAxis)) < DriverConstants.driveDeadband){
       drive = 0; 
     }
     else{
-      drive = joy.getRawAxis(OperatorConstants.driveJoystickAxis)*-DriverConstants.driveSpeed;  
+      drive = joy.getRawAxis(OperatorConstants.driveJoystickAxis)*-driveSpeed;  
     }
 
     // turn 
@@ -63,6 +73,8 @@ public class DefaultDriveCommand extends CommandBase {
     // turn = -joy.getRawAxis(4) * 0.25; 
 
     DRIVE_SUBSYSTEM.set(drive_Limiter.calculate(drive), turn);
+  
+    SmartDashboard.putNumber("drive speed", drive); 
   }
 
   // Called once the command ends or is interrupted.

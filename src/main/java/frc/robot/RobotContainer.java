@@ -14,6 +14,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LedCommand;
 import frc.robot.commands.WristCommand;
+import frc.robot.commands.autoShootAndClearCommand;
 import frc.robot.commands.autoShootAndDockCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -42,6 +43,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -57,6 +59,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(); 
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(); 
@@ -67,7 +70,8 @@ public class RobotContainer {
   private final Joystick joystick = new Joystick(OperatorConstants.primaryControllerPort); 
   private final Joystick joystickSecondary = new Joystick(OperatorConstants.secondaryControllerPort); 
 
-  private final CommandGenericHID controller = new CommandGenericHID(1);  
+  // private final CommandGenericHID controllerPrimary = new CommandGenericHID(OperatorConstants.primaryControllerPort);  
+  private final CommandGenericHID controllerSecondary = new CommandGenericHID(OperatorConstants.secondaryControllerPort);  
 
   private final JoystickButton BUTTON_RB_SECONDARY = new JoystickButton(joystickSecondary, OperatorConstants.BUTTON_RB_PORT); 
   private final JoystickButton BUTTON_LB_SECONDARY = new JoystickButton(joystickSecondary, OperatorConstants.BUTTON_LB_PORT); 
@@ -84,9 +88,9 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.primaryControllerPort);
 
   private final Command m_shootAndDockCommand = new autoShootAndDockCommand(m_driveSubsystem, m_WristSubsystem, m_IntakeSubsystem, m_LedSubsystem); 
-  private final Command m_shootAndClearCommand = new autoShootAndDockCommand(m_driveSubsystem, m_WristSubsystem, m_IntakeSubsystem, m_LedSubsystem); 
+  private final Command m_shootAndClearCommand = new autoShootAndClearCommand(m_driveSubsystem, m_WristSubsystem, m_IntakeSubsystem, m_LedSubsystem); 
 
-  SendableChooser<Command> m_autoChooser = new SendableChooser<>(); 
+  SendableChooser<Command> m_autoChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -105,8 +109,7 @@ public class RobotContainer {
 
 
     Shuffleboard.getTab("Autonomous").add(m_autoChooser);
-    
-
+  
     configureBindings();
     defaultCommands();
     
@@ -162,7 +165,16 @@ public class RobotContainer {
     BUTTON_LB_SECONDARY.onTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeSpeed, false)); 
     BUTTON_LB_SECONDARY.onFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
 
-    BUTTON_A.toggleOnTrue(new WristCommand(m_WristSubsystem, WristConstants.wristIntakePosition, false, 0)); 
+    // BUTTON_A.toggleOnTrue(new WristCommand(m_WristSubsystem, WristConstants.wristIntakePosition, false, 0));
+    
+    BUTTON_A.toggleOnTrue(
+      new ParallelRaceGroup(
+        new WristCommand(m_WristSubsystem, WristConstants.wristIntakePosition, false, 0),
+        new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeSpeed, false)
+      )
+    );
+
+    BUTTON_A.toggleOnFalse(new WristCommand(m_WristSubsystem, WristConstants.wristShootPosition, false, 0)); 
 
     BUTTON_B.toggleOnTrue(new WristCommand(m_WristSubsystem, WristConstants.wristRestPosition, false, 0)); 
     
@@ -170,8 +182,19 @@ public class RobotContainer {
 
     BUTTON_Y.toggleOnTrue(new WristCommand(m_WristSubsystem, WristConstants.wristAboveIntakePosition, false, 0)); 
    
-    controller.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.rightTriggerThreshold).toggleOnFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
-    controller.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.rightTriggerThreshold).toggleOnTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSlowSpeed, false)); 
+    controllerSecondary.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.triggerThreshold).toggleOnFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
+    controllerSecondary.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.triggerThreshold).toggleOnTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSlowSpeed, false)); 
+    
+    // controller.axisGreaterThan(OperatorConstants.rightTriggerAxis, OperatorConstants.triggerThreshold).toggleOnTrue(
+    //   new SequentialCommandGroup(
+    //     new WristCommand(m_WristSubsystem, WristConstants.wristLowerOuttakePosition, true, 0),
+    //     new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeMidSpeed, false)
+    //   )
+    // );  
+
+    controllerSecondary.axisGreaterThan(OperatorConstants.leftTriggerAxis, OperatorConstants.triggerThreshold).toggleOnFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
+    controllerSecondary.axisGreaterThan(OperatorConstants.leftTriggerAxis, OperatorConstants.triggerThreshold).toggleOnTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeMidSpeed, false));   
+  
   }
 
   /**

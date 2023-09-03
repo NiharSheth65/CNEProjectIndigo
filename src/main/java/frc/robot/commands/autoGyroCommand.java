@@ -33,16 +33,16 @@ public class autoGyroCommand extends CommandBase {
   @Override
   public void execute() {
 
-    if(Math.abs(gyroInitPosition - DRIVE_SUBSYSTEM.getHeading()) < AutoConstants.autoCutOff){
+    if(Math.abs(gyroInitPosition - DRIVE_SUBSYSTEM.getRoll()) < AutoConstants.autoCutOff){
       correctionSpeed = 0;    
     }
 
-    else if(DRIVE_SUBSYSTEM.getHeading() > gyroInitPosition){
-      correctionSpeed = -AutoConstants.autoDockingSpeed; 
+    else if(DRIVE_SUBSYSTEM.getRoll() > gyroInitPosition){
+      correctionSpeed = AutoConstants.autoDockingSpeedOverShoot; 
     }
 
-    else if(DRIVE_SUBSYSTEM.getHeading() < gyroInitPosition){
-      correctionSpeed = AutoConstants.autoDockingSpeed; 
+    else if(DRIVE_SUBSYSTEM.getRoll() < gyroInitPosition){
+      correctionSpeed = AutoConstants.autoDockingSpeedUnderShoot; 
     }
 
     DRIVE_SUBSYSTEM.set(correctionSpeed, 0);
