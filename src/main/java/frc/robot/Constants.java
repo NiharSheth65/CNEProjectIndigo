@@ -107,6 +107,10 @@ public final class Constants {
     
     public static final int[] greenColourCode = {0, 255, 0}; 
     public static final int[] indigoColourCode = {75, 0, 130}; 
+    public static final int[] blueColourCode = {0, 0, 255}; 
+    public static final int[] redColourCode = {255, 0, 0}; 
+
+    public static final int policeFlashCycle = 1000; 
   
   }
 
@@ -142,6 +146,8 @@ public final class Constants {
     public static final double autoDockingSpeedUnderShoot = -0.25; 
 
     public static final double autoCutOff = 3;
+
+    public static final double armInPlaceDelay = 2000; 
   }
 
 }

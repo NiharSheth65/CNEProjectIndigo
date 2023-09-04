@@ -139,9 +139,11 @@ public class RobotContainer {
   }
 
   private void defaultCommands(){
+  
+    m_LedSubsystem.setDefaultCommand(new LedCommand(m_LedSubsystem, m_IntakeSubsystem, m_driveSubsystem, joystick));
     m_driveSubsystem.setDefaultCommand(new DefaultDriveCommand(m_driveSubsystem, joystick));
-
-    m_IntakeSubsystem.setDefaultCommand(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false));
+    
+    // m_IntakeSubsystem.setDefaultCommand(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false));
   }
 
   /**

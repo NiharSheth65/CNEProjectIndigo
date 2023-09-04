@@ -51,4 +51,28 @@ public class LedSubsystem extends SubsystemBase {
       // led2.setData(led2_Buffer);
   }
 
+  // public void setPoliceFlash(double startTime){
+
+  //   startTime = System.currentTimeMillis(); 
+
+  //   int r = 0; 
+  //   int g = 0; 
+  //   int b = 0; 
+
+  //   if(Math.abs(startTime - System.currentTimeMillis()) < 2000){
+
+
+
+  //   }
+
+  //   else{
+  //     startTime = System.currentTimeMillis(); 
+  //     r = 255;
+  //     g = 100;
+  //     b = 100;
+  //   }
+
+  //   setOneColour(r, g, b);
+  //     // led2.setData(led2_Buffer);
+  // }
 }

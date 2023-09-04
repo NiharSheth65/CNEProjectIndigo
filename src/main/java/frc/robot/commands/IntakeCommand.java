@@ -37,16 +37,7 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Intake_Subsystem.intake(intakeSpeed);
-
-    if(Intake_Subsystem.intakeSwitchOneValue() == true){
-      Led_Subsystem.setOneColour(LedConstants.greenColourCode[0], LedConstants.greenColourCode[1], LedConstants.greenColourCode[2]);
-    }
-
-    else{
-      Led_Subsystem.setOneColour(LedConstants.indigoColourCode[0], LedConstants.indigoColourCode[1], LedConstants.indigoColourCode[2]);
-    }
-  
+    Intake_Subsystem.intake(intakeSpeed);  
   }
 
   // Called once the command ends or is interrupted.
