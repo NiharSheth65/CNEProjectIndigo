@@ -32,9 +32,10 @@ public class autoShootAndDockCommand extends SequentialCommandGroup {
       //   new IntakeCommand(intake, led, 0.5, true)
       // )
 
-      new WristCommand(wrist, WristConstants.wristShootPosition, true, 2000),
-      new IntakeCommand(intake, led, IntakeConstants.outtakeSpeed, true),
+      // new WristCommand(wrist, WristConstants.wristShootPosition, true, 2000),
+      // new IntakeCommand(intake, led, IntakeConstants.outtakeSpeed, true),
       new autoDriveForwardCommand(drive, AutoConstants.dockDistance, AutoConstants.autoDriveSpeed), 
+      // new autoDriveForwardCommand(drive, -AutoConstants.dockDistance, -AutoConstants.autoDriveSpeed), 
       // new DelayCommand(750),
       new autoGyroCommand(drive, autoInitPosition)
 

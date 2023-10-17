@@ -139,7 +139,8 @@ public final class Constants {
   public static class AutoConstants{
     public static final double clearDistance = -4;
     // public static final double dockDistance = -2.76;
-    public static final double dockDistance = -2.76;
+    // public static final double dockDistance = -2.76;
+    public static final double dockDistance = -10;
     public static final double autoDriveSpeed = -0.5;
   
     public static final double autoDockingSpeedOverShoot = 0.25; 
