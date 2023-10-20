@@ -16,12 +16,17 @@ import frc.robot.commands.LedCommand;
 import frc.robot.commands.WristCommand;
 import frc.robot.commands.autoShootAndClearCommand;
 import frc.robot.commands.autoShootAndDockCommand;
+import frc.robot.commands.buttonTurnCommand;
+import frc.robot.commands.limelightReadCommand;
+import frc.robot.commands.visionAlignCommand;
+import frc.robot.commands.visionDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 // import frc.robot.subsystems.Led2Subsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.limelightSubsystem;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -65,6 +70,8 @@ public class RobotContainer {
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(); 
   private final WristSubsystem m_WristSubsystem = new WristSubsystem(); 
   private final LedSubsystem m_LedSubsystem = new LedSubsystem();   
+  private final limelightSubsystem m_LimlightSubsystem = new limelightSubsystem(); 
+
   // private final Led2Subsystem m_Led2Subsystem = new Led2Subsystem(); 
 
   private final Joystick joystick = new Joystick(OperatorConstants.primaryControllerPort); 
@@ -78,6 +85,11 @@ public class RobotContainer {
 
   private final JoystickButton BUTTON_RB = new JoystickButton(joystick, OperatorConstants.BUTTON_RB_PORT); 
 
+  private final JoystickButton BUTTON_A_PRIMARY = new JoystickButton(joystick, OperatorConstants.BUTTON_A_PORT); 
+  private final JoystickButton BUTTON_B_PRIMARY = new JoystickButton(joystick, OperatorConstants.BUTTON_B_PORT); 
+  private final JoystickButton BUTTON_X_PRIMARY = new JoystickButton(joystick, OperatorConstants.BUTTON_X_PORT); 
+  private final JoystickButton BUTTON_Y_PRIMARY = new JoystickButton(joystick, OperatorConstants.BUTTON_Y_PORT); 
+  
   private final JoystickButton BUTTON_A = new JoystickButton(joystickSecondary, OperatorConstants.BUTTON_A_PORT);
   private final JoystickButton BUTTON_B = new JoystickButton(joystickSecondary, OperatorConstants.BUTTON_B_PORT); 
   private final JoystickButton BUTTON_X = new JoystickButton(joystickSecondary, OperatorConstants.BUTTON_X_PORT); 
@@ -142,7 +154,8 @@ public class RobotContainer {
   
     m_LedSubsystem.setDefaultCommand(new LedCommand(m_LedSubsystem, m_IntakeSubsystem, m_driveSubsystem, joystick));
     m_driveSubsystem.setDefaultCommand(new DefaultDriveCommand(m_driveSubsystem, joystick));
-    
+    m_LimlightSubsystem.setDefaultCommand(new limelightReadCommand(m_LimlightSubsystem));
+
     // m_IntakeSubsystem.setDefaultCommand(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false));
   }
 
@@ -161,11 +174,75 @@ public class RobotContainer {
     // teleopTrigger.onTrue(new ResetEncoderCommand());
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    BUTTON_RB_SECONDARY.onTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSpeed, false)); 
+    // BUTTON_RB_SECONDARY.onTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSpeed, false)); 
+    
+    BUTTON_RB_SECONDARY.onTrue(
+        // new SequentialCommandGroup(
+          // new visionAlignCommand(m_driveSubsystem, m_LimlightSubsystem, false), 
+          // new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, -0.6, false)
+        // ) 
+  
+        new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSpeed, false)
+    ); 
+
+      // new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSpeed, false)); 
+    
+    
     BUTTON_RB_SECONDARY.onFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
     
     BUTTON_LB_SECONDARY.onTrue(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeSpeed, false)); 
     BUTTON_LB_SECONDARY.onFalse(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.intakeOffSpeed, false)); 
+
+
+    BUTTON_A_PRIMARY.onTrue(
+      new buttonTurnCommand(m_driveSubsystem, 90, false) 
+    ); 
+
+    BUTTON_A_PRIMARY.onFalse(
+      new buttonTurnCommand(m_driveSubsystem, 0, true) 
+    ); 
+
+    BUTTON_B_PRIMARY.onTrue(
+      new buttonTurnCommand(m_driveSubsystem, -90, false) 
+    ); 
+
+    BUTTON_B_PRIMARY.onFalse(
+      new buttonTurnCommand(m_driveSubsystem, 0, true)
+    );
+
+    BUTTON_Y_PRIMARY.onTrue(
+      new visionAlignCommand(m_driveSubsystem, m_LimlightSubsystem, false, 0)
+      .andThen(new visionDriveCommand(m_driveSubsystem, m_LimlightSubsystem, false, 0))
+      .andThen(new visionAlignCommand(m_driveSubsystem, m_LimlightSubsystem, false, 0))
+      .andThen(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSpeed, false))
+    ); 
+
+      // new limelightReadCommand(m_LimlightSubsystem, false) 
+      
+
+    BUTTON_Y_PRIMARY.onFalse(
+      // new limelightReadCommand(m_LimlightSubsystem, true) 
+    // new buttonTurnCommand(m_driveSubsystem, 0, true) 
+      new visionAlignCommand(m_driveSubsystem, m_LimlightSubsystem, true, 0)
+      .andThen(new visionDriveCommand(m_driveSubsystem, m_LimlightSubsystem, true, 0))
+    ); 
+
+    BUTTON_X_PRIMARY.onTrue(
+      new visionAlignCommand(m_driveSubsystem, m_LimlightSubsystem, false, 1)
+      .andThen(new visionDriveCommand(m_driveSubsystem, m_LimlightSubsystem, false, 1))
+      .andThen(new visionAlignCommand(m_driveSubsystem, m_LimlightSubsystem, false, 1))
+      .andThen(new IntakeCommand(m_IntakeSubsystem, m_LedSubsystem, IntakeConstants.outtakeSpeed, false))
+    ); 
+
+      // new limelightReadCommand(m_LimlightSubsystem, false) 
+      
+
+    BUTTON_X_PRIMARY.onFalse(
+      // new limelightReadCommand(m_LimlightSubsystem, true) 
+    // new buttonTurnCommand(m_driveSubsystem, 0, true) 
+      new visionAlignCommand(m_driveSubsystem, m_LimlightSubsystem, true, 1)
+      .andThen(new visionDriveCommand(m_driveSubsystem, m_LimlightSubsystem, true, 1))
+    ); 
 
     // BUTTON_A.toggleOnTrue(new WristCommand(m_WristSubsystem, WristConstants.wristIntakePosition, false, 0));
     

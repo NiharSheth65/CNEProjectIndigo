@@ -88,8 +88,8 @@ public class DriveSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("gyro pitch", DRIVE_SUBSYSTEM.getPitch()); 
     // SmartDashboard.putNumber("gyro roll", DRIVE_SUBSYSTEM.getRoll()); 
 
-    SmartDashboard.putNumber("right encoder", rightEncoderPosition()); 
-    SmartDashboard.putNumber("left encoder", leftEncoderPosition());
+    // SmartDashboard.putNumber("right encoder", rightEncoderPosition()); 
+    // SmartDashboard.putNumber("left encoder", leftEncoderPosition());
     // SmartDashboard.putNumber("gyro ", getHeading());  
     SmartDashboard.putNumber("gyro PITCH", getPitch());   
     SmartDashboard.putNumber("gyro Yaw", getYaw());   
@@ -127,7 +127,7 @@ public class DriveSubsystem extends SubsystemBase {
     return leftFrontEncoder.getVelocity(); 
   }
 
-  public double rightEncoderVelociy(){
+  public double rightEncoderVelocity(){
     return -rightFrontEncoder.getVelocity(); 
   }
 
@@ -163,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return new DifferentialDriveWheelSpeeds(leftEncoderVelocity(), rightEncoderVelociy()); 
+    return new DifferentialDriveWheelSpeeds(leftEncoderVelocity(), rightEncoderVelocity()); 
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts){

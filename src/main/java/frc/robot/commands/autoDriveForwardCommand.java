@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
@@ -28,6 +29,8 @@ public class autoDriveForwardCommand extends CommandBase {
   double leftWheelOutput;
 
   double averageDistance; 
+  double gryoInitPosition; 
+  
 
   public autoDriveForwardCommand(DriveSubsystem drive, double driveDistance, double driveSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -56,17 +59,22 @@ public class autoDriveForwardCommand extends CommandBase {
     velocityLeftPIDControllers.reset();
     velocityRightPIDControllers.reset();
     gryoDrivePIDControllers.reset();
+    gryoInitPosition = DRIVE_SUBSYSTEM.getYaw();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    double leftWheelVelocity = DRIVE_SUBSYSTEM.leftEncoderPosition(); 
-    double rightWheelVelocity = DRIVE_SUBSYSTEM.rightEncoderPosition(); 
+    // double leftWheelVelocity = DRIVE_SUBSYSTEM.leftEncoderPosition(); 
+    double leftWheelVelocity = DRIVE_SUBSYSTEM.leftEncoderVelocity(); 
+    
+    // double rightWheelVelocity = DRIVE_SUBSYSTEM.rightEncoderPosition(); 
+    double rightWheelVelocity = DRIVE_SUBSYSTEM.rightEncoderVelocity(); 
+    
   
+    double gyroSpeed = gryoDrivePIDControllers.calculate(DRIVE_SUBSYSTEM.getYaw(), gryoInitPosition);
 
-    double gyroSpeed = gryoDrivePIDControllers.calculate(DRIVE_SUBSYSTEM.getTurnRate(), gyroTargetPosition);
     // averageDistance = (DRIVE_SUBSYSTEM.getRightEncoder() + DRIVE_SUBSYSTEM.getLeftEncoder())/2; 
     averageDistance = DRIVE_SUBSYSTEM.getAverageEncoderDistance();  
 
@@ -84,7 +92,7 @@ public class autoDriveForwardCommand extends CommandBase {
 
     else {
       autonomousSpeed = 0;
-      gyroSpeed = 0;
+      // gyroSpeed = 0;
     }
 
     // rightWheelOutput = velocityRightPIDControllers.calculate(rightWheelVelocity, driveForwardSetPoint);
@@ -113,14 +121,11 @@ public class autoDriveForwardCommand extends CommandBase {
     // DRIVE_SUBSYSTEM.setRight(-1*(rightWheelOutput - gyroSpeed));
     // DRIVE_SUBSYSTEM.setLeft(-1*(leftWheelOutput + gyroSpeed));
 
-    SmartDashboard.putNumber("set point`", driveForwardSetPoint); 
-    SmartDashboard.putNumber("left wheel velocity", leftWheelOutput); 
-    SmartDashboard.putNumber("left wheel velocity", rightWheelOutput); 
-    SmartDashboard.putNumber("encoder position", averageDistance);
-    SmartDashboard.putNumber("right position", DRIVE_SUBSYSTEM.rightEncoderPosition());
-    SmartDashboard.putNumber("left position", DRIVE_SUBSYSTEM.leftEncoderPosition());
-
-    DRIVE_SUBSYSTEM.tankMode(leftWheelOutput, leftWheelOutput);
+    SmartDashboard.putNumber("gyro init position", gryoInitPosition); 
+    SmartDashboard.putNumber("GRYO SPEED", gyroSpeed);  
+    SmartDashboard.putNumber("difference", DRIVE_SUBSYSTEM.getYaw()); 
+    
+    DRIVE_SUBSYSTEM.tankMode(leftWheelOutput + gyroSpeed, leftWheelOutput - gyroSpeed);
 
   }
 
